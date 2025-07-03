@@ -1,7 +1,7 @@
 '''Before using enter the following:
-    wallet name and path
-    stake_amount (tao amount per subnet)
-    netuids_to_stake (subnets to DCA into)'''
+    • wallet name and path
+    • stake_amount (tao amount per subnet)
+    • netuids_to_stake (subnets to DCA into)'''
 
 
 
