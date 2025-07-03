@@ -1,4 +1,3 @@
-# Auto DCA program - makes a single stake on each subnet listed
 import bittensor as bt
 from bittensor.utils.balance import Balance
 
@@ -9,6 +8,7 @@ subtensor = bt.subtensor(network='test')
 # Values for staking operation
 stake_amount = 0.1 # Amount (tao) to stake per subnet
 netuids_to_stake = [9, 55, 89] # List of subnets to stake into
+
 hotkeys_to_stake = [] # Leave empty
 amounts_to_stake = [] # Leave empty
 
@@ -20,6 +20,10 @@ print(f'Your wallet balance is: {wallet_balance}\n')
 print(f'You would like to stake into the following {len(netuids_to_stake)} subnets:')
 for i in range(len(netuids_to_stake)):
     print(netuids_to_stake[i])
+
+continue_check = str(input('Correct? (y/n): '))
+if not (continue_check == 'y' or continue_check == 'Y'):
+    exit()
 
 # Check required balance for stake
 print(f'Requiring {stake_amount*len(netuids_to_stake)}τ free')
