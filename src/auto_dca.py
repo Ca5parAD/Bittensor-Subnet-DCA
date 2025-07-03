@@ -9,7 +9,7 @@ import bittensor as bt
 from bittensor.utils.balance import Balance
 
 # Setup wallet
-wallet = bt.wallet(path="enter/your/wallet/path", name="Wallet Name")
+wallet = bt.wallet(path="/enter/your/wallet/path", name="Wallet Name")
 subtensor = bt.subtensor(network='finney') # Or use (network='test') for testnet
 
 # Values for staking operation
