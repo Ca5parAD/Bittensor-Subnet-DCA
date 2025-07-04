@@ -1,23 +1,31 @@
-'''Before using enter the following:
-    • wallet name and path
-    • stake_amount (tao amount per subnet)
-    • netuids_to_stake (subnets to DCA into)'''
+# ********** Please fill: **********
 
+# E.g.
+# your_wallet_path = '/enter/your/wallet/path'
+# your_wallet_name = 'Wallet name'
+# your_network = 'finney' # or 'test' for testnet
+#
+# stake_amount = 0.1 # Amount (tao) to stake per subnet
+# netuids_to_stake = [1, 3, 56, 64] # List of subnets to stake into
 
+your_wallet_path = ''
+your_wallet_name = ''
+your_network = 'finney'
+
+stake_amount = 0.1
+netuids_to_stake = []
+
+# **********************************
 
 import bittensor as bt
 from bittensor.utils.balance import Balance
 
 # Setup wallet
-wallet = bt.wallet(path="/enter/your/wallet/path", name="Wallet Name")
-subtensor = bt.subtensor(network='finney') # Or use (network='test') for testnet
+wallet = bt.wallet(path=your_wallet_path, name=your_wallet_name)
+subtensor = bt.subtensor(network=your_network)
 
-# Values for staking operation
-stake_amount = 0.1 # Amount (tao) to stake per subnet
-netuids_to_stake = [] # List of subnets to stake into, e.g. [3, 4, 56, 64]
-
-hotkeys_to_stake = [] # Leave empty
-amounts_to_stake = [] # Leave empty
+hotkeys_to_stake = []
+amounts_to_stake = []
 
 
 # Show balance and subnets to stake into
