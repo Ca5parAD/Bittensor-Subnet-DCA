@@ -19,6 +19,18 @@ class FullWalletInfo:
                 subnet_info = self.subtensor.subnet(netuid=info.netuid)
                 self.alpha_stake += bittensor.Balance(float(info.stake) * float(subnet_info.price)) # Converts alpha stake to tao and sums
 
+    def print_balances(self):
+        print(f'\nFor coldkey: {self.wallet.coldkeypub.ss58_address}')
+        print(f'Free tao: {self.free_tao} | Root stake: {self.root_stake} | Alpha stake: {self.alpha_stake}')
+        print(f'Total: {self.free_tao + self.root_stake + self.alpha_stake}')
+
+    def check_netuids_to_stake(self, netuids_to_stake, stake_amount):
+        self.netuids_to_stake = netuids_to_stake
+        self.stake_amount = stake_amount
+        print(f'\nYou would like to stake into the following {len(self.netuids_to_stake)} subnets:')
+        for i in range(len(self.netuids_to_stake)):
+            print(self.netuids_to_stake[i])
+        print(f'Requiring {bittensor.Balance(self.stake_amount*len(self.netuids_to_stake))} free')
 
     def check_balances_for_stake(self, total_stake_amount):
         if total_stake_amount < float(self.free_tao):
@@ -34,15 +46,8 @@ class FullWalletInfo:
         else:
             print(f'Free tao and root stake insufficient to make stake')
             exit()
-
-    def print_balances(self):
-        print(f'\nFor coldkey: {self.wallet.coldkeypub.ss58_address}')
-        print(f'Free tao: {self.free_tao} | Root stake: {self.root_stake} | Alpha stake: {self.alpha_stake}')
-        print(f'Total: {self.free_tao + self.root_stake + self.alpha_stake}')
                 
-    def organise_hotkeys_to_stake(self, netuids_to_stake, stake_amount):
-        self.netuids_to_stake = netuids_to_stake
-        self.stake_amount = stake_amount
+    def organise_hotkeys_to_stake(self):
         self.hotkeys_to_stake = []
         self.amounts_to_stake = []
         self.no_stake_flag = False
@@ -52,7 +57,7 @@ class FullWalletInfo:
                 if netuid == self.delegated_info[i].netuid:
                     print(f'Subnet {netuid} staked to: {self.delegated_info[i].hotkey_ss58}')
                     self.hotkeys_to_stake.append(self.delegated_info[i].hotkey_ss58)
-                    self.amounts_to_stake.append(stake_amount)
+                    self.amounts_to_stake.append(self.stake_amount)
                     break
                 elif i == len(self.delegated_info) - 1:
                     print(f'No stake for subnet: {netuid}')
@@ -70,10 +75,10 @@ class FullWalletInfo:
                     if stake_success == True:
                         print(f'Stake on subnet {netuid} successful')
                     else:
-                        print(f'(2) Failed to make a stake for subnet: {netuid} ')
+                        print(f'(1) Failed to make a stake for subnet: {netuid} ')
                     break
                 elif i == len(self.delegated_info) - 1:
-                    print(f'(1) Failed to make a stake for subnet: {netuid} ')
+                    print(f'(2) Failed to make a stake for subnet: {netuid} ')
 
 def continue_check(message):
     continue_check = str(input(f'{message} (y/n): '))

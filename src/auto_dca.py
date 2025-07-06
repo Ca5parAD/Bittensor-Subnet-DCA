@@ -20,27 +20,24 @@ netuids_to_stake = []
 import bittensor
 import auto_dca_utils as custom
 
-# Setup wallet
+# Setup wallet and subtensor
 wallet = bittensor.wallet(path=your_wallet_path, name=your_wallet_name)
 subtensor = bittensor.subtensor(network=your_network)
 
-wallet_info = custom.FullWalletInfo(wallet, subtensor)
+wallet_info = custom.FullWalletInfo(wallet, subtensor) # Create wallet info instance
 
 wallet_info.print_balances()
 
-print(f'\nYou would like to stake into the following {len(netuids_to_stake)} subnets:')
-for i in range(len(netuids_to_stake)):
-    print(netuids_to_stake[i])
-print(f'Requiring {bittensor.Balance(stake_amount*len(netuids_to_stake))} free')
+wallet_info.check_netuids_to_stake(netuids_to_stake, stake_amount)
 
 custom.continue_check('\nCorrect?')
 
 wallet_info.check_balances_for_stake(stake_amount*len(netuids_to_stake))
-wallet_info.organise_hotkeys_to_stake(netuids_to_stake, stake_amount)
+wallet_info.organise_hotkeys_to_stake()
 
 custom.continue_check('\nContinue?')
 
 wallet_info.make_stakes()
 
-wallet_info.__init__(wallet, subtensor)
-wallet_info.print_balances()
+wallet_info.__init__(wallet, subtensor) # Re-initialise wallet
+wallet_info.print_balances() # Print new balances
