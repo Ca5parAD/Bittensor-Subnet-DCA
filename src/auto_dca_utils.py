@@ -66,7 +66,7 @@ class FullWalletInfo:
         for netuid in self.netuids_to_stake:
             for i in range(len(self.delegated_info)):
                 if netuid == self.delegated_info[i].netuid:
-                    stake_success = self.subtensor.add_stake(wallet=self.wallet, netuid=netuid, hotkey_ss58s=self.hotkeys_to_stake, amounts=self.stake_amount)
+                    stake_success = self.subtensor.add_stake(wallet=self.wallet, netuid=netuid, hotkey_ss58=self.hotkeys_to_stake[i], amount=bittensor.Balance(self.stake_amount))
                     if stake_success == True:
                         print(f'Stake on subnet {netuid} successful')
                     else:
