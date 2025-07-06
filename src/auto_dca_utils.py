@@ -20,8 +20,7 @@ class FullWalletInfo:
                 self.alpha_stake += bittensor.Balance(float(info.stake) * float(subnet_info.price)) # Converts alpha stake to tao and sums
 
 
-    def check_balances(self, total_stake_amount):
-        print(total_stake_amount)
+    def check_balances_for_stake(self, total_stake_amount):
         if total_stake_amount < float(self.free_tao):
             pass
         elif total_stake_amount < float(self.free_tao) + float(self.root_stake):
@@ -35,13 +34,20 @@ class FullWalletInfo:
         else:
             print(f'Free tao and root stake insufficient to make stake')
             exit()
+
+    def print_balances(self):
+        print(f'\nFor coldkey: {self.wallet.coldkeypub.ss58_address}')
+        print(f'Free tao: {self.free_tao} | Root stake: {self.root_stake} | Alpha stake: {self.alpha_stake}')
+        print(f'Total: {self.free_tao + self.root_stake + self.alpha_stake}')
                 
     def organise_hotkeys_to_stake(self, netuids_to_stake, stake_amount):
+        self.netuids_to_stake = netuids_to_stake
+        self.stake_amount = stake_amount
         self.hotkeys_to_stake = []
         self.amounts_to_stake = []
         self.no_stake_flag = False
 
-        for netuid in netuids_to_stake:
+        for netuid in self.netuids_to_stake:
             for i in range(len(self.delegated_info)):
                 if netuid == self.delegated_info[i].netuid:
                     print(f'Subnet {netuid} staked to: {self.delegated_info[i].hotkey_ss58}')
@@ -50,6 +56,21 @@ class FullWalletInfo:
                     break
                 elif i == len(self.delegated_info) - 1:
                     print(f'No stake for subnet: {netuid}')
-                    self.no_stake_flag = True
-        
+                    self.no_stake_flag = True      
+                
+        if self.no_stake_flag == True:
+            print('Need to make an initial stake on each subnet before using this program')
+            exit()
 
+    def make_stakes(self):
+        for netuid in self.netuids_to_stake:
+            for i in range(len(self.delegated_info)):
+                if netuid == self.delegated_info[i].netuid:
+                    stake_success = self.subtensor.add_stake(wallet=self.wallet, netuid=netuid, hotkey_ss58s=self.hotkeys_to_stake, amounts=self.stake_amount)
+                    if stake_success == True:
+                        print(f'Stake on subnet {netuid} successful')
+                    else:
+                        print(f'(2) Failed to make a stake for subnet: {netuid} ')
+                    break
+                elif i == len(self.delegated_info) - 1:
+                    print(f'(1) Failed to make a stake for subnet: {netuid} ')

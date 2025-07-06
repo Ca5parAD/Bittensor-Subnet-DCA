@@ -26,9 +26,7 @@ subtensor = bittensor.subtensor(network=your_network)
 
 wallet_info = custom.FullWalletInfo(wallet, subtensor)
 
-print(f'\nFor coldkey: {wallet.coldkeypub.ss58_address}')
-print(f'Free tao: {wallet_info.free_tao} | Root stake: {wallet_info.root_stake} | Alpha stake: {wallet_info.alpha_stake}')
-print(f'Total: {wallet_info.free_tao + wallet_info.root_stake + wallet_info.alpha_stake}')
+wallet_info.print_balances()
 
 print(f'\nYou would like to stake into the following {len(netuids_to_stake)} subnets:')
 for i in range(len(netuids_to_stake)):
@@ -39,23 +37,18 @@ continue_check = str(input('\nCorrect? (y/n): '))
 if not (continue_check == 'y' or continue_check == 'Y'):
     exit()
 
-wallet_info.check_balances(stake_amount*len(netuids_to_stake))
+wallet_info.check_balances_for_stake(stake_amount*len(netuids_to_stake))
 
 wallet_info.organise_hotkeys_to_stake(netuids_to_stake, stake_amount)
 
 
 print('\n')
-if wallet_info.no_stake_flag == True:
-    print('Need to make an initial stake on each subnet before using this program')
+
+continue_check = str(input('Correct? (y/n): '))
+if not (continue_check == 'y' or continue_check == 'Y'):
     exit()
-else:
-    continue_check = str(input('Correct? (y/n): '))
-    if not (continue_check == 'y' or continue_check == 'Y'):
-        exit()
 
-subtensor.add_stake_multiple(wallet=wallet, netuids=netuids_to_stake, hotkey_ss58s=wallet_info.hotkeys_to_stake, amounts=wallet_info.amounts_to_stake)
-print('Your stakes have been made!')
+wallet_info.make_stakes()
 
-wallet_balance = wallet_info.__init__(wallet, subtensor)
-print(f'Free tao: {wallet_info.free_tao} | Root stake: {wallet_info.root_stake} | Alpha stake: {wallet_info.alpha_stake}')
-print(f'Total: {wallet_info.free_tao + wallet_info.root_stake + wallet_info.alpha_stake}')
+wallet_info.__init__(wallet, subtensor)
+wallet_info.print_balances()
