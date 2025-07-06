@@ -1,6 +1,6 @@
 # Bittensor Subnet DCA
 
-A Python program to automate Dollar-Cost Averaging (DCA) staking into Bittensor subnets, supporting both testnet and mainnet.
+A Python program to execute multiple subnet DCA's at once; intended to save time by eliminating the need to individually stake into each subnet you are DCAing into.
 
 ## Features
 - Stakes a user-defined TAO amount into specified subnets.
@@ -11,7 +11,7 @@ A Python program to automate Dollar-Cost Averaging (DCA) staking into Bittensor 
 ## Prerequisites
 - Python 3.8+
 - Bittensor library
-- A configured Bittensor wallet with TAO (testnet or mainnet)
+- A configured Bittensor wallet with TAO
 
 ## Installation
 Clone the repo:
