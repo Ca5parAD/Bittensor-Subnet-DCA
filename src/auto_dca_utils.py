@@ -74,3 +74,8 @@ class FullWalletInfo:
                     break
                 elif i == len(self.delegated_info) - 1:
                     print(f'(1) Failed to make a stake for subnet: {netuid} ')
+
+def continue_check(message):
+    continue_check = str(input(f'{message} (y/n): '))
+    if not (continue_check == 'y' or continue_check == 'Y'):
+        exit()

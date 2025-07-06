@@ -33,20 +33,12 @@ for i in range(len(netuids_to_stake)):
     print(netuids_to_stake[i])
 print(f'Requiring {bittensor.Balance(stake_amount*len(netuids_to_stake))} free')
 
-continue_check = str(input('\nCorrect? (y/n): '))
-if not (continue_check == 'y' or continue_check == 'Y'):
-    exit()
+custom.continue_check('\nCorrect?')
 
 wallet_info.check_balances_for_stake(stake_amount*len(netuids_to_stake))
-
 wallet_info.organise_hotkeys_to_stake(netuids_to_stake, stake_amount)
 
-
-print('\n')
-
-continue_check = str(input('Correct? (y/n): '))
-if not (continue_check == 'y' or continue_check == 'Y'):
-    exit()
+custom.continue_check('\nContinue?')
 
 wallet_info.make_stakes()
 
