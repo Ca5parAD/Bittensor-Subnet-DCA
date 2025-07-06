@@ -41,7 +41,7 @@ if not (continue_check == 'y' or continue_check == 'Y'):
 
 wallet_info.check_balances(stake_amount*len(netuids_to_stake))
 
-wallet_info.organise_hotkeys_to_stake(netuids_to_stake)
+wallet_info.organise_hotkeys_to_stake(netuids_to_stake, stake_amount)
 
 
 print('\n')
@@ -53,7 +53,7 @@ else:
     if not (continue_check == 'y' or continue_check == 'Y'):
         exit()
 
-subtensor.add_stake_multiple(wallet=wallet, netuids=netuids_to_stake, hotkey_ss58s=hotkeys_to_stake, amounts=amounts_to_stake)
+subtensor.add_stake_multiple(wallet=wallet, netuids=netuids_to_stake, hotkey_ss58s=wallet_info.hotkeys_to_stake, amounts=wallet_info.amounts_to_stake)
 print('Your stakes have been made!')
 
 wallet_balance = wallet_info.__init__(wallet, subtensor)

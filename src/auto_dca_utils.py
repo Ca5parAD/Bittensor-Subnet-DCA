@@ -36,8 +36,9 @@ class FullWalletInfo:
             print(f'Free tao and root stake insufficient to make stake')
             exit()
                 
-    def organise_hotkeys_to_stake(self, netuids_to_stake):
+    def organise_hotkeys_to_stake(self, netuids_to_stake, stake_amount):
         self.hotkeys_to_stake = []
+        self.amounts_to_stake = []
         self.no_stake_flag = False
 
         for netuid in netuids_to_stake:
@@ -45,6 +46,7 @@ class FullWalletInfo:
                 if netuid == self.delegated_info[i].netuid:
                     print(f'Subnet {netuid} staked to: {self.delegated_info[i].hotkey_ss58}')
                     self.hotkeys_to_stake.append(self.delegated_info[i].hotkey_ss58)
+                    self.amounts_to_stake.append(stake_amount)
                     break
                 elif i == len(self.delegated_info) - 1:
                     print(f'No stake for subnet: {netuid}')
