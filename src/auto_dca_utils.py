@@ -25,7 +25,7 @@ class FullWalletInfo:
         if total_stake_amount < float(self.free_tao):
             pass
         elif total_stake_amount < float(self.free_tao) + float(self.root_stake):
-            root_unstake_needed = total_stake_amount - self.free_tao
+            root_unstake_needed = total_stake_amount - float(self.free_tao)
             print('Not enough free tao')
             continue_check = str(input(f'Would you like to unstake {root_unstake_needed} from root? (y/n): '))
             if (continue_check == 'y' or continue_check == 'Y'):
