@@ -55,6 +55,7 @@ class FullWalletInfo:
                             hotkey_ss58=self.delegated_info[i].hotkey_ss58,
                             amount=bittensor.Balance(unstake_amount)
                         )
+                        break
                     else:
                         self.subtensor.unstake(
                             wallet=self.wallet,
