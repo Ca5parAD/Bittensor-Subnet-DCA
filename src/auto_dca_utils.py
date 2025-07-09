@@ -1,5 +1,7 @@
 import bittensor
 
+minimum_tao_balance = 0.001
+
 class FullWalletInfo:
     def __init__(self, wallet, subtensor):
         self.wallet = wallet
@@ -33,12 +35,12 @@ class FullWalletInfo:
         print(f'Requiring τ{self.stake_amount*len(self.netuids_to_stake)}')
 
     def check_balances_for_stake(self, total_stake_amount):
-        if total_stake_amount < self.free_tao:
+        if total_stake_amount < (self.free_tao - minimum_tao_balance):
             pass
 
-        # If total stake amount < free tao and root stake, unstake remander from root
-        elif total_stake_amount < self.free_tao + self.root_stake:
-            root_unstake_needed = total_stake_amount - self.free_tao
+        # If possible unstake required amount from root
+        elif total_stake_amount < (self.free_tao - minimum_tao_balance) + (self.root_stake - minimum_tao_balance):
+            root_unstake_needed = total_stake_amount - (self.free_tao - minimum_tao_balance)
             print('Not enough free tao')
             continue_check(f'Would you like to unstake {root_unstake_needed} from root?')
 
@@ -46,7 +48,7 @@ class FullWalletInfo:
             i = 0
             while root_unstake_made < root_unstake_needed:
                 if self.delegated_info[i].netuid == 0:
-                    this_stake_amount = float(self.delegated_info[i].stake)
+                    this_stake_amount = float(self.delegated_info[i].stake - minimum_tao_balance)
                     if root_unstake_made + this_stake_amount > root_unstake_needed:
                         unstake_amount = root_unstake_needed - root_unstake_made
                         self.subtensor.unstake(
@@ -61,7 +63,7 @@ class FullWalletInfo:
                             wallet=self.wallet,
                             netuid=0,
                             hotkey_ss58=self.delegated_info[i].hotkey_ss58,
-                            amount=self.delegated_info[i].stake
+                            amount=bittensor.Balance(this_stake_amount)
                         )
                 i += 1
 
