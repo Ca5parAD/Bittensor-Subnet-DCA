@@ -29,7 +29,7 @@ class FullWalletInfo:
     def check_netuids_to_stake(self, netuids_to_stake, stake_amount):
         self.netuids_to_stake = netuids_to_stake
         self.stake_amount = stake_amount
-        print(f'\nYou would like to stake into the following {len(self.netuids_to_stake)} subnets:')
+        print(f'\nYou would like to stake τ{stake_amount} into the following {len(self.netuids_to_stake)} subnets:')
         for i in range(len(self.netuids_to_stake)):
             print(self.netuids_to_stake[i])
         print(f'Requiring τ{self.stake_amount*len(self.netuids_to_stake)}')
