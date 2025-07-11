@@ -30,7 +30,7 @@ wallet_info.print_balances()
 
 wallet_info.check_netuids_to_stake(netuids_to_stake, stake_amount)
 
-custom.continue_check('\nCorrect?')
+custom.continue_check('Correct?')
 
 wallet_info.check_balances_for_stake(stake_amount*len(netuids_to_stake))
 wallet_info.organise_hotkeys_to_stake()

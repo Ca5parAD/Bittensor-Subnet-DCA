@@ -40,35 +40,48 @@ class FullWalletInfo:
 
         # If possible unstake required amount from root
         elif total_stake_amount < (self.free_tao - minimum_tao_balance) + (self.root_stake - minimum_tao_balance):
-            root_unstake_needed = total_stake_amount - (max(self.free_tao - minimum_tao_balance, 0)) # Avoid negative minus
-            print('Not enough free tao')
-            continue_check(f'Would you like to unstake {root_unstake_needed} from root?')
+            root_unstake_needed = total_stake_amount - (max(self.free_tao - minimum_tao_balance, 0))
+            print('\nNot enough free tao')
+            continue_check(f'Would you like to unstake τ{root_unstake_needed} from root?')
 
+            print('\n')
             root_unstake_made = 0
             i = 0
             while root_unstake_made < root_unstake_needed:
-                if self.delegated_info[i].netuid == 0 and float(self.delegated_info[i].stake) > minimum_tao_balance:
+                if self.delegated_info[i].netuid == 0 and float(self.delegated_info[i].stake) > (2 * minimum_tao_balance):
                     this_stake_amount = float(self.delegated_info[i].stake - minimum_tao_balance)
                     if root_unstake_made + this_stake_amount > root_unstake_needed:
                         unstake_amount = root_unstake_needed - root_unstake_made
-                        self.subtensor.unstake(
+                        unstake_successful = self.subtensor.unstake(
                             wallet=self.wallet,
                             netuid=0,
                             hotkey_ss58=self.delegated_info[i].hotkey_ss58,
-                            amount=bittensor.Balance(unstake_amount)
+                            amount=bittensor.Balance(float(unstake_amount))
                         )
+                        if unstake_successful:
+                            print(f'τ{unstake_amount} unstaked from: {self.delegated_info[i].hotkey_ss58}')
+                        else:
+                            # Improve error handling
+                            print(f'Unsuccessful unstaking τ{unstake_amount} from: {self.delegated_info[i].hotkey_ss58}')
+                            quit()
                         break
                     else:
-                        self.subtensor.unstake(
+                        unstake_successful = self.subtensor.unstake(
                             wallet=self.wallet,
                             netuid=0,
                             hotkey_ss58=self.delegated_info[i].hotkey_ss58,
-                            amount=bittensor.Balance(this_stake_amount)
+                            amount=bittensor.Balance(float(this_stake_amount))
                         )
+                        if unstake_successful:
+                            print(f'τ{this_stake_amount} unstaked from: {self.delegated_info[i].hotkey_ss58}')
+                        else:
+                            # Improve error handling
+                            print(f'Unsuccessful unstaking τ{unstake_amount} from: {self.delegated_info[i].hotkey_ss58}')
+                            quit()
                 i += 1
 
         else:
-            print(f'Free tao and root stake insufficient to make stake')
+            print(f'\nFree tao and root stake insufficient to make stake')
             exit()
                 
     def organise_hotkeys_to_stake(self):
@@ -79,7 +92,7 @@ class FullWalletInfo:
             found_flag = False
             for info in self.delegated_info:
                 if netuid == info.netuid:
-                    print(f'Subnet {netuid} staked to: {info.hotkey_ss58}')
+                    print(f'\nSubnet {netuid} staked to: {info.hotkey_ss58}')
                     self.netuid_hotkey_pairs.append((netuid, info.hotkey_ss58)) # Create list of tuples
                     found_flag = True
                     break
@@ -88,19 +101,20 @@ class FullWalletInfo:
                 self.no_stake_flag = True
 
         if self.no_stake_flag:
-            print('Need to make an initial stake on each subnet before using this program')
+            print('\nNeed to make an initial stake on each subnet before using this program')
             exit()
 
     def make_stakes(self):
+        print('\n')
         for pair in self.netuid_hotkey_pairs:
             netuid, hotkey = pair
-            stake_success = self.subtensor.add_stake(
+            stake_successful = self.subtensor.add_stake(
                 wallet=self.wallet,
                 netuid=netuid,
                 hotkey_ss58=hotkey,
-                amount=bittensor.Balance(self.stake_amount)
+                amount=bittensor.Balance(float(self.stake_amount))
             )
-            if stake_success:
+            if stake_successful:
                 print(f'Stake on subnet {netuid} to {hotkey} successful')
             else:
                 print(f'Failed to make a stake on subnet {netuid} to {hotkey}')
