@@ -2,7 +2,7 @@
 
 # E.g.
 # your_wallet_path = '/enter/your/wallet/path'
-# your_wallet_name = 'Wallet name'
+# your_wallet_name = 'Wallet Name'
 # your_network = 'finney' # or 'test' for testnet
 #
 # stake_amount = 0.1 # Amount (tao) to stake per subnet
@@ -18,13 +18,13 @@ netuids_to_stake = []
 # **********************************
 
 import bittensor
-import auto_dca_utils as custom
+import auto_dca_utils as custom 
 
 # Setup wallet and subtensor
 wallet = bittensor.wallet(path=your_wallet_path, name=your_wallet_name)
 subtensor = bittensor.subtensor(network=your_network)
 
-wallet_info = custom.FullWalletInfo(wallet, subtensor) # Create wallet info instance
+wallet_info = custom.WalletOperationFunctionality(wallet, subtensor) # Create wallet functionality object
 
 wallet_info.print_balances()
 
@@ -40,4 +40,4 @@ custom.continue_check('\nContinue?')
 wallet_info.make_stakes()
 
 wallet_info.__init__(wallet, subtensor) # Re-initialise wallet
-wallet_info.print_balances() # Print new balances
+wallet_info.print_balances()
