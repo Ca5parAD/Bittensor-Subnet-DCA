@@ -1,6 +1,6 @@
 import bittensor
 
-minimum_tao_balance = 0.001
+minimum_tao_balance = 0.0005
 
 class FullWalletInfo:
     def __init__(self, wallet, subtensor):
@@ -32,7 +32,7 @@ class FullWalletInfo:
         print(f'\nYou would like to stake τ{stake_amount} into the following {len(self.netuids_to_stake)} subnets:')
         for i in range(len(self.netuids_to_stake)):
             print(self.netuids_to_stake[i])
-        print(f'Requiring τ{self.stake_amount*len(self.netuids_to_stake)}')
+        print(f'Requiring τ{self.stake_amount*len(self.netuids_to_stake)} total')
 
     def check_balances_for_stake(self, total_stake_amount):
         if total_stake_amount < (self.free_tao - minimum_tao_balance):
@@ -40,14 +40,14 @@ class FullWalletInfo:
 
         # If possible unstake required amount from root
         elif total_stake_amount < (self.free_tao - minimum_tao_balance) + (self.root_stake - minimum_tao_balance):
-            root_unstake_needed = total_stake_amount - (self.free_tao - minimum_tao_balance)
+            root_unstake_needed = total_stake_amount - (max(self.free_tao - minimum_tao_balance, 0)) # Avoid negative minus
             print('Not enough free tao')
             continue_check(f'Would you like to unstake {root_unstake_needed} from root?')
 
             root_unstake_made = 0
             i = 0
             while root_unstake_made < root_unstake_needed:
-                if self.delegated_info[i].netuid == 0:
+                if self.delegated_info[i].netuid == 0 and float(self.delegated_info[i].stake) > minimum_tao_balance:
                     this_stake_amount = float(self.delegated_info[i].stake - minimum_tao_balance)
                     if root_unstake_made + this_stake_amount > root_unstake_needed:
                         unstake_amount = root_unstake_needed - root_unstake_made
