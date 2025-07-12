@@ -1,12 +1,12 @@
 import bittensor
 
-minimum_tao_balance = 0.0005
+MINIMUM_TAO_BALANCE = 0.0005
 
 class WalletOperationFunctionality:
     def __init__(self, wallet, subtensor):
         self.wallet = wallet
         self.subtensor = subtensor
-        self.free_tao = float(self.subtensor.get_balance(address=self.wallet.coldkeypub.ss58_address)) # Gets free tao balance
+        self.free_tao = float(self.subtensor.get_balance(address=self.wallet.coldkeypub.ss58_address))
         
         self.delegated_info = self.subtensor.get_delegated(coldkey_ss58=self.wallet.coldkeypub.ss58_address)
         self.delegated_info.sort(key=lambda info: info.netuid)  # Sort delgated information by netuid
@@ -36,12 +36,12 @@ class WalletOperationFunctionality:
         print(f'Requiring τ{self.stake_amount*len(self.netuids_to_stake)} total')
 
     def check_balances_for_stake(self, total_stake_amount):
-        if total_stake_amount < (self.free_tao - minimum_tao_balance): # If free tao is sufficent amount required for stake
+        if total_stake_amount < (self.free_tao - MINIMUM_TAO_BALANCE): # If free tao is sufficent amount required for stake
             pass
 
         # If possible unstake required amount from root
-        elif total_stake_amount < (self.free_tao - minimum_tao_balance) + (self.root_stake - minimum_tao_balance):
-            root_unstake_needed = total_stake_amount - (max(self.free_tao - minimum_tao_balance, 0))
+        elif total_stake_amount < (self.free_tao - MINIMUM_TAO_BALANCE) + (self.root_stake - MINIMUM_TAO_BALANCE):
+            root_unstake_needed = total_stake_amount - (max(self.free_tao - MINIMUM_TAO_BALANCE, 0))
             print('\nNot enough free tao')
             continue_check(f'Would you like to unstake τ{root_unstake_needed} from root?')
 
@@ -51,8 +51,8 @@ class WalletOperationFunctionality:
             while root_unstake_made < root_unstake_needed:
 
                 # Check for subnet root and enough stake
-                if self.delegated_info[i].netuid == 0 and float(self.delegated_info[i].stake) > (2 * minimum_tao_balance):
-                    this_stake_amount = float(self.delegated_info[i].stake - minimum_tao_balance)
+                if self.delegated_info[i].netuid == 0 and float(self.delegated_info[i].stake) > (2 * MINIMUM_TAO_BALANCE):
+                    this_stake_amount = float(self.delegated_info[i].stake - MINIMUM_TAO_BALANCE)
 
                     # Stake more then needed, unstake required amount
                     if root_unstake_made + this_stake_amount > root_unstake_needed:
