@@ -31,7 +31,6 @@ except:
 wallet_info = custom.WalletOperationFunctionality(wallet, subtensor) # Create wallet functionality object
 
 wallet_info.print_balances()
-
 wallet_info.check_netuids_to_stake(NETUIDS_TO_STAKE, STAKE_AMOUNT)
 
 custom.continue_check('Correct?')

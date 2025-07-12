@@ -31,9 +31,9 @@ class WalletOperationFunctionality:
         self.stake_amount = stake_amount
         print(f'\nYou would like to stake τ{stake_amount} into the following {len(self.netuids_to_stake)} subnets:')
         # Print the list of subnets to stake into
-        for i in range(len(self.netuids_to_stake)):
-            print(self.netuids_to_stake[i])
-        print(f'Requiring τ{self.stake_amount*len(self.netuids_to_stake)} total')
+        for netuid in self.netuids_to_stake:
+            print(netuid)
+        print(f'Requiring τ{self.stake_amount*len(netuid)} total')
 
     def check_balances_for_stake(self, total_stake_amount):
         if total_stake_amount < (self.free_tao - MINIMUM_TAO_BALANCE): # If free tao is sufficent amount required for stake
