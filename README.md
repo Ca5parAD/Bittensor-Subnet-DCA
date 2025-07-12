@@ -22,19 +22,20 @@ cd Bittensor-Subnet-DCA
 
 ## Usage
 Edit auto_dca.py to set:
-- your_wallet_path: Path to your Bittensor wallet.
-- your_wallet_name: Wallet name.
-- your_network: 'finney' for mainnet or 'test' for testnet.
-- stake_amount: TAO to stake per subnet.
-- netuids_to_stake: List of subnet IDs.
+- YOUR_WALLET_PATH: Path to your Bittensor wallet.
+- YOUR_WALLET_NAME: Wallet name.
+- YOUR_NETWORK: 'finney' for mainnet or 'test' for testnet.
+- STAKE_AMOUNT: TAO to stake per subnet.
+- NETUIDS_TO_STAKE: List of subnet IDs.
 
 ### Example
 ```py
-your_wallet_path = '/Users/<user>/.bittensor/wallets'
-your_wallet_name = 'MyWallet'
-your_network = 'finney'
-stake_amount = 0.1
-netuids_to_stake = [1, 3, 56, 64]
+YOUR_WALLET_PATH = '/Users/<user>/.bittensor/wallets'
+YOUR_WALLET_NAME = 'MyWallet'
+YOUR_NETWORK = 'finney'
+
+STAKE_AMOUNT = 0.1
+NETUIDS_TO_STAKE = [1, 3, 56, 64]
 ```
 
 ## Run the script:
