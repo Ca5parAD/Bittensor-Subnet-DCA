@@ -33,10 +33,10 @@ class WalletOperationFunctionality:
         # Print the list of subnets to stake into
         for netuid in self.netuids_to_stake:
             print(netuid)
-        print(f'Requiring τ{self.stake_amount*len(netuid)} total')
+        print(f'Requiring τ{self.stake_amount*len(netuids_to_stake)} total')
 
     def check_balances_for_stake(self, total_stake_amount):
-        if total_stake_amount < (self.free_tao - MINIMUM_TAO_BALANCE): # If free tao is sufficent amount required for stake
+        if total_stake_amount <= (self.free_tao - MINIMUM_TAO_BALANCE): # If free tao is sufficent amount required for stake
             pass
 
         # If possible unstake required amount from root
@@ -97,6 +97,8 @@ class WalletOperationFunctionality:
         self.netuid_hotkey_pairs = []
         self.no_stake_flag = False
 
+        print('\n')
+
         # Cycle through subnets to stake into
         for netuid in self.netuids_to_stake:
             found_flag = False
@@ -104,7 +106,7 @@ class WalletOperationFunctionality:
             # Cycle through delegate info
             for info in self.delegated_info:
                 if netuid == info.netuid:
-                    print(f'\nSubnet {netuid} staked to: {info.hotkey_ss58}')
+                    print(f'Subnet {netuid} staked to: {info.hotkey_ss58}')
                     self.netuid_hotkey_pairs.append((netuid, info.hotkey_ss58)) # Create list of tuples of subnets and validators
                     found_flag = True
                     break

@@ -26,7 +26,7 @@ try:
     subtensor = bittensor.subtensor(network=YOUR_NETWORK)
 
 except:
-    print('Something went connecting to the Bittensor network')
+    print('Something went wrong connecting to the Bittensor network')
     
 wallet_info = custom.WalletOperationFunctionality(wallet, subtensor) # Create wallet functionality object
 
@@ -38,7 +38,7 @@ custom.continue_check('Correct?')
 wallet_info.check_balances_for_stake(STAKE_AMOUNT*len(NETUIDS_TO_STAKE))
 wallet_info.organise_hotkeys_to_stake()
 
-custom.continue_check('\nContinue?')
+custom.continue_check('Continue?')
 
 wallet_info.make_stakes()
 
