@@ -1,6 +1,6 @@
 # Bittensor Subnet DCA
 
-A Python program to execute multiple subnet DCA's at once; intended to save time by eliminating the need to individually stake into each subnet you are DCAing into.
+A Python program to execute multiple Bittensor subnet staking operations at once for the purpose of DCAing; intended to save time by eliminating the need to individually stake into each subnet you are DCAing into with every staking interval. Instead configure the program settings to your specific needs and simply run the program each time you would like to stake.
 
 ## Features
 - Stakes a user-defined TAO amount into specified subnets.
