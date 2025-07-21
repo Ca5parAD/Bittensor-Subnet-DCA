@@ -8,12 +8,12 @@ YOUR_NETWORK = 'finney' # or 'test' for testnet
 STAKE_AMOUNT = 0.1 # Amount (tao) to stake per subnet
 NETUIDS_TO_STAKE = [1, 3, 56, 64] # List of subnets to stake into'''
 
-YOUR_WALLET_PATH = ''
-YOUR_WALLET_NAME = ''
-YOUR_NETWORK = 'finney'
+YOUR_WALLET_PATH: Final = ''
+YOUR_WALLET_NAME: Final = ''
+YOUR_NETWORK: Final = 'finney'
 
-STAKE_AMOUNT = 0.1
-NETUIDS_TO_STAKE = []
+STAKE_AMOUNT: Final = 0.1
+NETUIDS_TO_STAKE: Final = []
 
 # **********************************
 
