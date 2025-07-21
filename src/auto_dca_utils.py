@@ -137,5 +137,5 @@ class WalletOperationFunctionality:
 # Gets user input to clarify continuation
 def continue_check(message):
     continue_check = str(input(f'{message} (y/n): '))
-    if not (continue_check == 'y' or continue_check == 'Y'):
+    if not (continue_check.lower() == 'y'):
         exit()
