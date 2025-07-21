@@ -1,12 +1,12 @@
 # ********** Please fill: **********
 
-# E.g.
-# YOUR_WALLET_PATH = '/enter/your/wallet/path'
-# YOUR_WALLET_NAME = 'Wallet Name'
-# YOUR_NETWORK = 'finney' # or 'test' for testnet
-#
-# STAKE_AMOUNT = 0.1 # Amount (tao) to stake per subnet
-# NETUIDS_TO_STAKE = [1, 3, 56, 64] # List of subnets to stake into
+'''E.g.
+YOUR_WALLET_PATH = '/enter/your/wallet/path'
+YOUR_WALLET_NAME = 'Wallet Name'
+YOUR_NETWORK = 'finney' # or 'test' for testnet
+
+STAKE_AMOUNT = 0.1 # Amount (tao) to stake per subnet
+NETUIDS_TO_STAKE = [1, 3, 56, 64] # List of subnets to stake into'''
 
 YOUR_WALLET_PATH = ''
 YOUR_WALLET_NAME = ''
