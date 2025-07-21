@@ -1,3 +1,7 @@
+from typing import Final
+import bittensor
+import auto_dca_utils as custom 
+
 # ********** Please fill: **********
 
 '''E.g.
@@ -16,9 +20,6 @@ STAKE_AMOUNT: Final = 0.1
 NETUIDS_TO_STAKE: Final = []
 
 # **********************************
-
-import bittensor
-import auto_dca_utils as custom 
 
 # Setup wallet and subtensor
 try:

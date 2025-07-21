@@ -1,6 +1,7 @@
+from typing import Final
 import bittensor
 
-MINIMUM_TAO_BALANCE = 0.0005
+MINIMUM_TAO_BALANCE: Final = 0.0005
 
 class WalletOperationFunctionality:
     def __init__(self, wallet, subtensor):
