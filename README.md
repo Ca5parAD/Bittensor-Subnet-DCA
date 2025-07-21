@@ -30,12 +30,12 @@ Edit auto_dca.py to set:
 
 ### Example
 ```py
-YOUR_WALLET_PATH = '/Users/<user>/.bittensor/wallets'
-YOUR_WALLET_NAME = 'MyWallet'
-YOUR_NETWORK = 'finney'
+YOUR_WALLET_PATH: Final = '/Users/<user>/.bittensor/wallets'
+YOUR_WALLET_NAME: Final = 'MyWallet'
+YOUR_NETWORK: Final = 'finney'
 
-STAKE_AMOUNT = 0.1
-NETUIDS_TO_STAKE = [1, 3, 56, 64]
+STAKE_AMOUNT: Final = 0.1
+NETUIDS_TO_STAKE: Final = [1, 3, 56, 64]
 ```
 
 ## Run the script:
