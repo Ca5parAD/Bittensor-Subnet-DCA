@@ -7,20 +7,32 @@ class WalletOperationFunctionality:
     def __init__(self, wallet, subtensor):
         self.wallet = wallet
         self.subtensor = subtensor
-        self.free_tao = float(self.subtensor.get_balance(address=self.wallet.coldkeypub.ss58_address))
+
+        try:
+            self.free_tao = float(self.subtensor.get_balance(address=self.wallet.coldkeypub.ss58_address))
+        except Exception as e:
+            print(f"Error getting balance: {str(e)}")
+            raise
         
-        self.delegated_info = self.subtensor.get_delegated(coldkey_ss58=self.wallet.coldkeypub.ss58_address)
-        self.delegated_info.sort(key=lambda info: info.netuid)  # Sort delgated information by netuid
+        try:
+            self.delegated_info = self.subtensor.get_delegated(coldkey_ss58=self.wallet.coldkeypub.ss58_address)
+            self.delegated_info.sort(key=lambda info: info.netuid)
+        except Exception as e:
+            print(f"Error getting delegated info: {str(e)}")
+            raise
 
         self.root_stake = 0
         self.alpha_stake = 0
         for info in self.delegated_info:
             if info.netuid == 0:
                 self.root_stake += float(info.stake) # Sums root stake
-
             else:
-                subnet_info = self.subtensor.subnet(netuid=info.netuid)
-                self.alpha_stake += float(info.stake) * float(subnet_info.price) # Converts alpha stake to tao and sums
+                try:
+                    subnet_info = self.subtensor.subnet(netuid=info.netuid)
+                    self.alpha_stake += float(info.stake) * float(subnet_info.price)
+                except Exception as e:
+                    print(f"Error getting subnet {info.netuid} info: {str(e)}")
+                    continue
 
     def print_balances(self):
         print(f'\nFor coldkey: {self.wallet.coldkeypub.ss58_address}')
@@ -41,7 +53,7 @@ class WalletOperationFunctionality:
         if self.total_stake_amount <= (self.free_tao - MINIMUM_TAO_BALANCE): # If free tao is sufficent amount required for stake
             pass
 
-        # If possible unstake required amount from root
+        # If possible, unstake required amount from root
         elif self.total_stake_amount < (self.free_tao - MINIMUM_TAO_BALANCE) + (self.root_stake - MINIMUM_TAO_BALANCE):
             root_unstake_needed = self.total_stake_amount - (max(self.free_tao - MINIMUM_TAO_BALANCE, 0))
             print('\nNot enough free tao')
@@ -51,7 +63,6 @@ class WalletOperationFunctionality:
             root_unstake_made = 0
             i = 0
             while root_unstake_made < root_unstake_needed:
-
                 # Check for subnet root and enough stake
                 if self.delegated_info[i].netuid == 0 and float(self.delegated_info[i].stake) > (2 * MINIMUM_TAO_BALANCE):
                     this_stake_amount = float(self.delegated_info[i].stake - MINIMUM_TAO_BALANCE)
@@ -59,34 +70,23 @@ class WalletOperationFunctionality:
                     # Stake more then needed, unstake required amount
                     if root_unstake_made + this_stake_amount > root_unstake_needed:
                         unstake_amount = root_unstake_needed - root_unstake_made
+                    else:
+                        unstake_amount = this_stake_amount
+
+                    try:
                         unstake_successful = self.subtensor.unstake(
                             wallet=self.wallet,
                             netuid=0,
                             hotkey_ss58=self.delegated_info[i].hotkey_ss58,
                             amount=bittensor.Balance(float(unstake_amount))
                         )
-
+                    except Exception as e:
+                        print(f"Unstake error: {str(e)}")
+                        continue
+                    else:
                         if unstake_successful:
                             print(f'τ{unstake_amount} unstaked from: {self.delegated_info[i].hotkey_ss58}')
                         else:
-                            # Improve error handling **********
-                            print(f'Unsuccessful unstaking τ{unstake_amount} from: {self.delegated_info[i].hotkey_ss58}')
-                            quit()
-                        break
-
-                    # Less then needed, unstake max amount
-                    else:
-                        unstake_successful = self.subtensor.unstake(
-                            wallet=self.wallet,
-                            netuid=0,
-                            hotkey_ss58=self.delegated_info[i].hotkey_ss58,
-                            amount=bittensor.Balance(float(this_stake_amount))
-                        )
-
-                        if unstake_successful:
-                            print(f'τ{this_stake_amount} unstaked from: {self.delegated_info[i].hotkey_ss58}')
-                        else:
-                            # Improve error handling **********
                             print(f'Unsuccessful unstaking τ{unstake_amount} from: {self.delegated_info[i].hotkey_ss58}')
                             quit()
                 i += 1
@@ -123,18 +123,21 @@ class WalletOperationFunctionality:
     def make_stakes(self):
         print('\n')
         # Cycle through subnet validator pairs
-        for pair in self.netuid_hotkey_pairs:
-            netuid, hotkey = pair
-            stake_successful = self.subtensor.add_stake(
-                wallet=self.wallet,
-                netuid=netuid,
-                hotkey_ss58=hotkey,
-                amount=bittensor.Balance(float(self.stake_amount))
-            )
-            if stake_successful:
-                print(f'Stake on subnet {netuid} to {hotkey} successful')
+        for netuid, hotkey in self.netuid_hotkey_pairs:
+            try:
+                stake_successful = self.subtensor.add_stake(
+                    wallet=self.wallet,
+                    netuid=netuid,
+                    hotkey_ss58=hotkey,
+                    amount=bittensor.Balance(float(self.stake_amount))
+                )
+            except Exception as e:
+                print(f"Stake error on subnet {netuid}: {str(e)}")
             else:
-                print(f'Failed to make a stake on subnet {netuid} to {hotkey}')
+                if stake_successful:
+                    print(f'Stake on subnet {netuid} to {hotkey} successful')
+                else:
+                    print(f'Failed to make a stake on subnet {netuid} to {hotkey}')
 
 # Gets user input to clarify continuation
 def continue_check(message):
