@@ -36,13 +36,14 @@ class WalletOperationFunctionality:
             print(netuid)
         print(f'Requiring τ{self.stake_amount*len(netuids_to_stake)} total')
 
-    def check_balances_for_stake(self, total_stake_amount):
-        if total_stake_amount <= (self.free_tao - MINIMUM_TAO_BALANCE): # If free tao is sufficent amount required for stake
+    def check_balances_for_stake(self):
+        self.total_stake_amount = self.stake_amount*self.netuids_to_stake
+        if self.total_stake_amount <= (self.free_tao - MINIMUM_TAO_BALANCE): # If free tao is sufficent amount required for stake
             pass
 
         # If possible unstake required amount from root
-        elif total_stake_amount < (self.free_tao - MINIMUM_TAO_BALANCE) + (self.root_stake - MINIMUM_TAO_BALANCE):
-            root_unstake_needed = total_stake_amount - (max(self.free_tao - MINIMUM_TAO_BALANCE, 0))
+        elif self.total_stake_amount < (self.free_tao - MINIMUM_TAO_BALANCE) + (self.root_stake - MINIMUM_TAO_BALANCE):
+            root_unstake_needed = self.total_stake_amount - (max(self.free_tao - MINIMUM_TAO_BALANCE, 0))
             print('\nNot enough free tao')
             continue_check(f'Would you like to unstake τ{root_unstake_needed} from root?')
 
