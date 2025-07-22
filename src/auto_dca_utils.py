@@ -49,7 +49,7 @@ class WalletOperationFunctionality:
         print(f'Requiring τ{self.stake_amount*len(netuids_to_stake)} total')
 
     def check_balances_for_stake(self):
-        self.total_stake_amount = self.stake_amount*self.netuids_to_stake
+        self.total_stake_amount = self.stake_amount * len(self.netuids_to_stake)
         if self.total_stake_amount <= (self.free_tao - MINIMUM_TAO_BALANCE): # If free tao is sufficent amount required for stake
             pass
 
@@ -85,6 +85,7 @@ class WalletOperationFunctionality:
                         continue
                     else:
                         if unstake_successful:
+                            root_unstake_made += unstake_amount
                             print(f'τ{unstake_amount} unstaked from: {self.delegated_info[i].hotkey_ss58}')
                         else:
                             print(f'Unsuccessful unstaking τ{unstake_amount} from: {self.delegated_info[i].hotkey_ss58}')
@@ -98,8 +99,6 @@ class WalletOperationFunctionality:
     def organise_hotkeys_to_stake(self):
         self.netuid_hotkey_pairs = []
         self.no_stake_flag = False
-
-        print('\n')
 
         # Cycle through subnets to stake into
         for netuid in self.netuids_to_stake:
@@ -121,7 +120,6 @@ class WalletOperationFunctionality:
             exit()
 
     def make_stakes(self):
-        print('\n')
         # Cycle through subnet validator pairs
         for netuid, hotkey in self.netuid_hotkey_pairs:
             try:
@@ -133,11 +131,13 @@ class WalletOperationFunctionality:
                 )
             except Exception as e:
                 print(f"Stake error on subnet {netuid}: {str(e)}")
+                continue_check('Would you like to continue?')
             else:
                 if stake_successful:
                     print(f'Stake on subnet {netuid} to {hotkey} successful')
                 else:
                     print(f'Failed to make a stake on subnet {netuid} to {hotkey}')
+                    continue_check('Would you like to continue?')
 
 # Gets user input to clarify continuation
 def continue_check(message):
