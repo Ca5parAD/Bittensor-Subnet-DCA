@@ -1,6 +1,6 @@
 from typing import Final
 import bittensor
-import auto_dca_utils as custom 
+import auto_dca_utils as utils 
 
 # ********** Please fill: **********
 
@@ -29,17 +29,17 @@ try:
 except:
     print('Something went wrong connecting to the Bittensor network')
     
-wallet_info = custom.WalletOperationFunctionality(wallet, subtensor) # Create wallet functionality object
+wallet_info = utils.WalletOperationFunctionality(wallet, subtensor) # Create wallet functionality object
 
 wallet_info.print_balances()
 wallet_info.check_netuids_to_stake(NETUIDS_TO_STAKE, STAKE_AMOUNT)
 
-custom.continue_check('Correct?')
+utils.continue_check('Correct?')
 
 wallet_info.check_balances_for_stake()
 wallet_info.organise_hotkeys_to_stake()
 
-custom.continue_check('Continue?')
+utils.continue_check('Continue?')
 
 wallet_info.make_stakes()
 
