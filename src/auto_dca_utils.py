@@ -36,7 +36,7 @@ class WalletOperationFunctionality:
 
     def print_balances(self):
         print(f'\nFor coldkey: {self.wallet.coldkeypub.ss58_address}')
-        print(f'Free tao: τ{self.free_tao} | Root stake: τ{self.root_stake} | Alpha stake: τ{self.alpha_stake}')
+        print(f'Free tao: τ{round(self.free_tao, 4)} | Root stake: τ{round(self.root_stake, 4)} | Alpha stake: τ{round(self.alpha_stake, 4)}')
         print(f'Total: τ{self.free_tao + self.root_stake + self.alpha_stake}')
 
     def check_netuids_to_stake(self, netuids_to_stake, stake_amount):
@@ -57,7 +57,7 @@ class WalletOperationFunctionality:
         elif self.total_stake_amount < (self.free_tao - MINIMUM_TAO_BALANCE) + (self.root_stake - MINIMUM_TAO_BALANCE):
             root_unstake_needed = self.total_stake_amount - (max(self.free_tao - MINIMUM_TAO_BALANCE, 0))
             print('\nNot enough free tao')
-            continue_check(f'Would you like to unstake τ{root_unstake_needed} from root?')
+            continue_check(f'Would you like to unstake τ{round(root_unstake_needed, 4)} from root?')
 
             print('\n')
             root_unstake_made = 0
@@ -86,9 +86,9 @@ class WalletOperationFunctionality:
                     else:
                         if unstake_successful:
                             root_unstake_made += unstake_amount
-                            print(f'τ{unstake_amount} unstaked from: {self.delegated_info[i].hotkey_ss58}')
+                            print(f'τ{round(unstake_amount, 4)} unstaked from: {self.delegated_info[i].hotkey_ss58}')
                         else:
-                            print(f'Unsuccessful unstaking τ{unstake_amount} from: {self.delegated_info[i].hotkey_ss58}')
+                            print(f'Unsuccessful unstaking τ{round(unstake_amount, 4)} from: {self.delegated_info[i].hotkey_ss58}')
                             quit()
                 i += 1
 
