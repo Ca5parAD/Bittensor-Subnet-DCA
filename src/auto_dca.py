@@ -1,4 +1,3 @@
-from typing import Final
 import bittensor
 import auto_dca_utils as utils 
 
@@ -12,13 +11,19 @@ YOUR_NETWORK = 'finney' # or 'test' for testnet
 STAKE_AMOUNT = 0.1 # Amount (tao) to stake per subnet
 NETUIDS_TO_STAKE = [1, 3, 56, 64] # List of subnets to stake into'''
 
-YOUR_WALLET_PATH: Final = ''
-YOUR_WALLET_NAME: Final = ''
-YOUR_NETWORK: Final = 'finney'
+YOUR_WALLET_PATH = ''
+YOUR_WALLET_NAME = ''
+YOUR_NETWORK = 'finney'
 
-STAKE_AMOUNT: Final = 0.1
-NETUIDS_TO_STAKE: Final = []
+STAKE_CONFIG = {
+    3: {'stake_amount': 0.4, 'multipliers': [(0.012, 1.5), (0.0114, 1.8)]},
+    8: {'stake_amount': 0.5, 'multipliers': None},
+    64: {'stake_amount': 1, 'multipliers': [(0.138, 1.5), (0.114, 2.0)]},
+    75: {'stake_amount': 0.6, 'multipliers': [(0.104, 1.3), (0.0885, 1.5)]}
+} # Make sure multiplier levels are in descending order
 
+# Look to impliment threading functionality to front run confirmations by start doing slow operations (access the network)
+# aswell as multiple delegation checks ()
 # **********************************
 
 # Setup wallet and subtensor
@@ -27,21 +32,26 @@ try:
     subtensor = bittensor.subtensor(network=YOUR_NETWORK)
 
 except:
-    print('Something went wrong connecting to the Bittensor network')
+    print('Something went wrong connecting to the Bittensor network\n')
+    quit()
+
+else:
+    print('Connection to Bittensor network successful\n')
     
-wallet_info = utils.WalletOperationFunctionality(wallet, subtensor) # Create wallet functionality object
+# Create wallet functionality object
+wallet_operations = utils.WalletOperationFunctionality(wallet, subtensor) 
 
-wallet_info.print_balances()
-wallet_info.check_netuids_to_stake(NETUIDS_TO_STAKE, STAKE_AMOUNT)
-
+wallet_operations.print_balances()
 utils.continue_check('Correct?')
 
-wallet_info.check_balances_for_stake()
-wallet_info.organise_hotkeys_to_stake()
+wallet_operations.config_stake_operations(STAKE_CONFIG)
+wallet_operations.confirm_stake_operations()
+utils.continue_check('Correct?')
 
+wallet_operations.check_balances_for_stake()
 utils.continue_check('Continue?')
 
-wallet_info.make_stakes()
+wallet_operations.make_stakes()
 
-wallet_info.__init__(wallet, subtensor) # Re-initialise wallet
-wallet_info.print_balances()
+wallet_operations.__init__(wallet, subtensor) # Re-initialise wallet
+wallet_operations.print_balances()
