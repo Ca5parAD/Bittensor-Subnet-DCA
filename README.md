@@ -2,6 +2,10 @@
 
 A Python program to execute multiple Bittensor subnet staking operations at once for the purpose of DCAing; intended to save time by eliminating the need to individually stake into each subnet you are DCAing into with every staking interval. Instead configure the program settings to your specific needs and simply run the program each time you would like to DCA.
 
+*** mention root unstaking
+*** mention individual stake amounts
+*** mention price multipliers
+
 ## Features
 - Stakes a user-defined TAO amount into specified subnets.
 - Checks wallet balances (free TAO, root stake, alpha stake) before staking.
@@ -27,6 +31,7 @@ Edit auto_dca.py to set:
 - YOUR_NETWORK: 'finney' for mainnet or 'test' for testnet.
 - STAKE_AMOUNT: TAO to stake per subnet.
 - NETUIDS_TO_STAKE: List of subnet IDs.
+*** adjust to reflect new version
 
 ### Example
 ```py
@@ -36,6 +41,7 @@ YOUR_NETWORK: Final = 'finney'
 
 STAKE_AMOUNT: Final = 0.1
 NETUIDS_TO_STAKE: Final = [1, 3, 56, 64]
+*** adjust to reflect new version
 ```
 
 ## Run the script:
