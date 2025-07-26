@@ -16,10 +16,10 @@ YOUR_WALLET_NAME = ''
 YOUR_NETWORK = 'finney'
 
 STAKE_CONFIG = {
-    3: {'stake_amount': 0.4, 'multipliers': [(0.012, 1.5), (0.0114, 1.8)]},
-    8: {'stake_amount': 0.5, 'multipliers': None},
-    64: {'stake_amount': 1, 'multipliers': [(0.138, 1.5), (0.114, 2.0)]},
-    75: {'stake_amount': 0.6, 'multipliers': [(0.104, 1.3), (0.0885, 1.5)]}
+    3: {'default_stake': 0.4, 'sub_level_stakes': [(0.012, 1.5), (0.0114, 1.8)]},
+    8: {'default_stake': 0.5, 'sub_level_stakes': None},
+    64: {'default_stake': 1, 'sub_level_stakes': [(0.138, 1.5), (0.114, 2.0)]},
+    75: {'default_stake': 0.6, 'sub_level_stakes': [(0.104, 1.3), (0.0885, 1.5)]}
 } # Make sure multiplier levels are in descending order
 
 # Look to impliment threading functionality to front run confirmations by start doing slow operations (access the network)
@@ -32,11 +32,11 @@ try:
     subtensor = bittensor.subtensor(network=YOUR_NETWORK)
 
 except:
-    print('Something went wrong connecting to the Bittensor network\n')
+    print('Something went wrong connecting to the Bittensor network')
     quit()
 
 else:
-    print('Connection to Bittensor network successful\n')
+    print('Connection to Bittensor network successful')
     
 # Create wallet functionality object
 wallet_operations = utils.WalletOperationFunctionality(wallet, subtensor) 
