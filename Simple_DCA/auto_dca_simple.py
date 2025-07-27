@@ -11,12 +11,12 @@ YOUR_NETWORK = 'finney' # or 'test' for testnet
 STAKE_AMOUNT = 0.1 # Amount (tao) to stake per subnet
 NETUIDS_TO_STAKE = [1, 3, 56, 64] # List of subnets to stake into'''
 
-YOUR_WALLET_PATH = '/Users/caspar/Bittensor/.bittensor/wallets'
-YOUR_WALLET_NAME = 'Chrome (5CXr)'
+YOUR_WALLET_PATH = ''
+YOUR_WALLET_NAME = ''
 YOUR_NETWORK = 'finney'
 
-STAKE_AMOUNT = 0.75
-NETUIDS_TO_STAKE = [1, 3, 4, 8, 13, 19, 37, 56, 64, 75]
+STAKE_AMOUNT = 0.1
+NETUIDS_TO_STAKE = []
 
 # **********************************
 
