@@ -97,7 +97,7 @@ class WalletOperationFunctionality:
     # free tao and root stake slightly off?
     def check_balances_for_stake(self):
         if self.total_stake_amount <= (self.free_tao - MINIMUM_TAO_BALANCE): # If free tao is sufficent amount required for stake
-            pass
+            print(f'You have enough free tao to make this stake')
 
         # If possible, unstake required amount from root
         elif self.total_stake_amount < (self.free_tao - MINIMUM_TAO_BALANCE) + (self.root_stake - MINIMUM_TAO_BALANCE):
