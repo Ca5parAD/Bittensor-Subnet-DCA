@@ -1,8 +1,6 @@
 # Bittensor Subnet DCA
 A Python program to execute multiple Bittensor subnet staking operations at once for the purpose of DCAing, intended to save time by eliminating the need to individually stake into each subnet being 'DCAd' into; incorporating 2 program options for different staking configurations.
 
-hello
-
 ### Features
 - Checks wallet balances (free TAO, root stake, alpha stake) before staking
 - Validates subnet delegation and prompts user confirmation
