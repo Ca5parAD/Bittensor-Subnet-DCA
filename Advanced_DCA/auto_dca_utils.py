@@ -1,6 +1,6 @@
 import bittensor
 
-MINIMUM_TAO_BALANCE = 0.0000005
+MINIMUM_TAO_BALANCE = 0 # Might cause problem with unstaking from root
 
 class WalletOperationFunctionality:
     def __init__(self, wallet, subtensor):
@@ -23,32 +23,41 @@ class WalletOperationFunctionality:
         self.root_stake = 0
         self.alpha_stake = 0
         self.raw_alpha_stakes_info = dict()
+        self.duplicate_netuid_stakes = dict()
 
-        for delegated_info in self.delegated_info:
-            if delegated_info.netuid == 0:
-                self.root_stake += float(delegated_info.stake) # Sums root stake
+        for info in self.delegated_info:
+            if info.netuid == 0:
+                self.root_stake += float(info.stake) # Sums root stake
             else:
-                try:
-                    subnet_info = self.SUBTENSOR.subnet(netuid=delegated_info.netuid)
+                if info.netuid in self.raw_alpha_stakes_info:
+                    if info.netuid not in self.duplicate_netuid_stakes:
+                        self.duplicate_netuid_stakes[info.netuid] = [(info.hotkey_ss58, info.owner_ss58)]
+                    else:                        
+                        self.duplicate_netuid_stakes[info.netuid].append((info.hotkey_ss58, info.owner_ss58))
+
+                else:
+                    try:
+                        subnet_info = self.SUBTENSOR.subnet(netuid=info.netuid)
+                    except Exception as e:
+                        print(f"Error getting subnet {info.netuid} info: {str(e)}")
+                        raise
 
                     # Create dictionary of netuid keys and values of staking information
-                    self.raw_alpha_stakes_info[delegated_info.netuid] = {
+                    self.raw_alpha_stakes_info[info.netuid] = {
                         'netuid_name': subnet_info.subnet_name,
                         'price': float(subnet_info.price),
-                        'delegator_hotkey': delegated_info.hotkey_ss58,
-                        'delegator_owner': delegated_info.owner_ss58
+                        'delegator_hotkey': info.hotkey_ss58,
+                        'delegator_owner': info.owner_ss58
                     }
 
-                    self.alpha_stake += float(delegated_info.stake) * float(subnet_info.price)
-                except Exception as e:
-                    print(f"Error getting subnet {delegated_info.netuid} info: {str(e)}")
-                    raise
+                self.alpha_stake += float(info.stake) * float(subnet_info.price)
 
 
     def print_balances(self):
         print(f'For coldkey: {self.WALLET.coldkeypub.ss58_address}')
         print(f'Free tao: τ{round(self.free_tao, 4)} | Root stake: τ{round(self.root_stake, 4)} | Alpha stake: τ{round(self.alpha_stake, 4)}')
         print(f'Total: τ{self.free_tao + self.root_stake + self.alpha_stake}')
+
 
     def config_stake_operations(self, stake_config):
         self.STAKE_CONFIG = stake_config
@@ -68,20 +77,51 @@ class WalletOperationFunctionality:
             else:
                 self.no_stake_netuids.append(netuid)
 
+
     def confirm_stake_operations(self):
+        if self.no_stake_netuids:
+            print(f'You must manually make an initial stake on subnets {self.no_stake_netuids} before using this program')
+            exit()
+
+        # Check this
+        for netuid, hotkey_owner_pairs in self.duplicate_netuid_stakes.items():
+            print(f'You have multiple delegations on subnet {netuid}:')
+            pairs_to_show = [(self.stakes_to_make_info[netuid]['delegator_hotkey'], self.stakes_to_make_info[netuid]['delegator_owner'])]
+            for pair in hotkey_owner_pairs:
+                pairs_to_show.append(pair)
+
+            for i, pair in enumerate(pairs_to_show):
+                try:
+                    identity_info = self.SUBTENSOR.query_identity(pair[1])
+                except Exception as e:
+                    print(f"Error getting subnet {netuid} name: {str(e)}")
+                    raise
+
+                if identity_info is not None:
+                    name = identity_info.name
+                else:
+                    name = '[Name not found]'
+                    
+                print(f'({i+1}) {name} ({pair[0][:6]}...)')
+
+            delegator_index = input(int('What delegator would you like to use (enter the number): ')) - 1
+
+            self.stakes_to_make_info[netuid]['delegator_hotkey'] = pairs_to_show[delegator_index][0]
+            self.stakes_to_make_info[netuid]['delegator_owner'] = pairs_to_show[delegator_index][1]
+
         print(f'Ready to stake into the following {len(self.stakes_to_make_info)} subnets:')
         self.total_stake_amount = 0
 
         # Print the list of stakes to be made
         for netuid, info in self.stakes_to_make_info.items(): 
             try:
-                delegator_name = self.SUBTENSOR.query_identity(info['delegator_owner']).name
+                identity_info = self.SUBTENSOR.query_identity(info['delegator_owner'])
             except Exception as e:
                 print(f"Error getting subnet {netuid} name: {str(e)}")
                 raise
 
-            if delegator_name is not None:
-                info['delegator_name'] = delegator_name
+            if identity_info is not None:
+                info['delegator_name'] = identity_info.name
             else:
                 info['delegator_name'] = '[Name not found]'
 
@@ -89,9 +129,6 @@ class WalletOperationFunctionality:
             self.total_stake_amount += info['amount']
         print(f'Requiring τ{self.total_stake_amount} total')
 
-        if self.no_stake_netuids:
-            print(f'However you must manually make an initial stake into netuids {self.no_stake_netuids} first')
-            exit()
 
     # Check through this for errors, or possible improvements
     # free tao and root stake slightly off?
@@ -139,8 +176,9 @@ class WalletOperationFunctionality:
                 i += 1
 
         else:
-            print(f'Free tao and root stake insufficient to make stake')
+            print(f'Free tao and root stake insufficient to make stake, please add more Tao!')
             exit()
+
 
     def make_stakes(self):
         # Cycle through subnet validator pairs
@@ -162,6 +200,7 @@ class WalletOperationFunctionality:
                 else:
                     print(f"Failed to make a stake on ({netuid}) {info['netuid_name']} to {info['delegator_name']} ({info['delegator_hotkey'][:6]}...)")
                     continue_check('Would you like to continue?')
+
 
 
 # Gets user input to clarify continuation
