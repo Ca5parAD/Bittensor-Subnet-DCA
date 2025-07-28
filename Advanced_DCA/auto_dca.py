@@ -25,6 +25,8 @@ STAKE_CONFIG = { # Make sure multiplier levels are in descending order
     75: {'default_stake': 0.6, 'sub_level_stakes': [(0.104, 1.3), (0.0885, 1.5)]}
 }
 
+# Wrong password error handling
+
 # **********************************
 
 # Setup wallet and subtensor
@@ -33,11 +35,11 @@ try:
     subtensor = bittensor.subtensor(network=YOUR_NETWORK)
 
 except:
-    print('Something went wrong connecting to the Bittensor network')
+    print('\nSomething went wrong connecting to the Bittensor network')
     quit()
 
 else:
-    print('Connection to Bittensor network successful')
+    print('\nConnection to Bittensor network successful')
     
 # Create wallet functionality object
 wallet_operations = utils.WalletOperationFunctionality(wallet, subtensor) 
