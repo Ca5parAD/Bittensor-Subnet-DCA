@@ -1,6 +1,6 @@
 import bittensor
 
-MINIMUM_TAO_BALANCE = 0 # Might cause problem with unstaking from root
+STAKING_FEES = 0.0015 # Estimate of transaction fees
 
 class WalletOperationFunctionality:
     def __init__(self, wallet, subtensor):
@@ -130,14 +130,15 @@ class WalletOperationFunctionality:
 
 
     # Check through this for errors, or possible improvements
-    # free tao and root stake slightly off?
     def check_balances_for_stake(self):
-        if self.total_stake_amount <= (self.free_tao - MINIMUM_TAO_BALANCE): # If free tao is sufficent amount required for stake
+        alpha_stake_fees = len(self.stakes_to_make_info) * STAKING_FEES
+
+        if self.total_stake_amount + alpha_stake_fees <= self.free_tao: # If free tao is sufficent amount required for stake
             print(f'\nYou have enough free tao to make this stake')
 
         # If possible, unstake required amount from root
-        elif self.total_stake_amount < (self.free_tao - MINIMUM_TAO_BALANCE) + (self.root_stake - MINIMUM_TAO_BALANCE):
-            root_unstake_needed = self.total_stake_amount - (max(self.free_tao - MINIMUM_TAO_BALANCE, 0))
+        elif self.total_stake_amount + alpha_stake_fees < self.free_tao + self.root_stake:
+            root_unstake_needed = self.total_stake_amount + alpha_stake_fees - self.free_tao
             print('\nNot enough free tao')
             continue_check(f'Would you like to unstake τ{round(root_unstake_needed, 10)} from root?')
 
@@ -147,10 +148,10 @@ class WalletOperationFunctionality:
             # Error handling unstake operations (retry wrong password)
             while root_unstake_made < root_unstake_needed:
                 # Check for subnet root and enough stake
-                if self.delegated_info[i].netuid == 0 and float(self.delegated_info[i].stake) > (2 * MINIMUM_TAO_BALANCE):
-                    this_stake_amount = float(self.delegated_info[i].stake - MINIMUM_TAO_BALANCE)
+                if self.delegated_info[i].netuid == 0 and float(self.delegated_info[i].stake) > STAKING_FEES:
+                    this_stake_amount = float(self.delegated_info[i].stake)
 
-                    # Stake more then needed, unstake required amount
+                    # If this stake is more than needed, unstake required amount
                     if root_unstake_made + this_stake_amount > root_unstake_needed:
                         unstake_amount = root_unstake_needed - root_unstake_made
                     else:
@@ -168,7 +169,7 @@ class WalletOperationFunctionality:
                         continue
                     else:
                         if unstake_successful:
-                            root_unstake_made += unstake_amount
+                            root_unstake_made += (unstake_amount - STAKING_FEES)
                             print(f'τ{round(unstake_amount, 4)} unstaked from: {self.delegated_info[i].hotkey_ss58}')
                         else:
                             print(f'Unsuccessful unstaking τ{round(unstake_amount, 4)} from: {self.delegated_info[i].hotkey_ss58}')
@@ -197,7 +198,7 @@ class WalletOperationFunctionality:
                 continue_check('Would you like to continue?')
             else:
                 if stake_successful:
-                    print(f"Successfully staked on ({netuid}) {info['netuid_name']} to {info['delegator_name']} ({info['delegator_hotkey'][:6]}...): {info['amount']}")
+                    print(f"Successfully staked on ({netuid}) {info['netuid_name']} to {info['delegator_name']} ({info['delegator_hotkey'][:6]}...): τ{info['amount']}")
                 else:
                     print(f"Failed to make a stake on ({netuid}) {info['netuid_name']} to {info['delegator_name']} ({info['delegator_hotkey'][:6]}...)")
                     continue_check('Would you like to continue?')
