@@ -153,7 +153,7 @@ class WalletOperationFunctionality:
 
                     # If this stake is more than needed, unstake required amount
                     if root_unstake_made + this_stake_amount > root_unstake_needed:
-                        unstake_amount = root_unstake_needed - root_unstake_made
+                        unstake_amount = (root_unstake_needed - root_unstake_made) + STAKING_FEES
                     else:
                         unstake_amount = this_stake_amount
 
@@ -169,7 +169,7 @@ class WalletOperationFunctionality:
                         continue
                     else:
                         if unstake_successful:
-                            root_unstake_made += (unstake_amount - STAKING_FEES)
+                            root_unstake_made += unstake_amount - STAKING_FEES
                             print(f'τ{round(unstake_amount, 4)} unstaked from: {self.delegated_info[i].hotkey_ss58}')
                         else:
                             print(f'Unsuccessful unstaking τ{round(unstake_amount, 4)} from: {self.delegated_info[i].hotkey_ss58}')
