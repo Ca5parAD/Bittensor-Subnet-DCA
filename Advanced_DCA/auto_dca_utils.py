@@ -129,12 +129,11 @@ class WalletOperationFunctionality:
         print(f'Requiring τ{round(self.total_stake_amount, 4)} total')
 
 
-    # Check through this for errors, or possible improvements
     def check_balances_for_stake(self):
         alpha_stake_fees = len(self.stakes_to_make_info) * STAKING_FEES
 
         if self.total_stake_amount + alpha_stake_fees <= self.free_tao: # If free tao is sufficent amount required for stake
-            print(f'\nYou have enough free tao to make this stake')
+            print(f'\nFree tao sufficient for chosen stakes')
 
         # If possible, unstake required amount from root
         elif self.total_stake_amount + alpha_stake_fees < self.free_tao + self.root_stake:

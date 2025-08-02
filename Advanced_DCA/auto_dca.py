@@ -52,7 +52,7 @@ wallet_operations.confirm_stake_operations()
 utils.continue_check('Correct?')
 
 wallet_operations.check_balances_for_stake()
-utils.continue_check('Continue?')
+utils.continue_check('Make stakes?')
 
 wallet_operations.make_stakes()
 
