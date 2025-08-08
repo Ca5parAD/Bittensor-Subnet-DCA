@@ -1,0 +1,8 @@
+# Ignores personal staking configuration
+config.json
+
+# Ignores pycache
+__pycache__/
+
+# Ignores all log files
+*.log
