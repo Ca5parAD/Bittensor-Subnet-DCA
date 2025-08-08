@@ -1,0 +1,14 @@
+{
+    "wallet_path": "/enter/your/wallet/path",
+    "wallet_name": "Wallet Name",
+    "network": "finney",
+
+    "stake_amount_simple": 0.1,
+    "netuids_to_stake_simple": [19, 56, 64],
+
+    "stake_config_advanced": {
+        "19": {"default_stake": 0.8, "sub_level_stakes": null},
+        "56": {"default_stake": 1, "sub_level_stakes": [[0.047, 2]]},
+        "64": {"default_stake": 0.75, "sub_level_stakes": [[0.1386, 1.5], [0.1179, 2]]}
+    }
+}
