@@ -1,6 +1,6 @@
 # Ignores personal staking configuration
-config.json
-config_backup.json
+*.json
+
 
 # Ignores pycache
 __pycache__/
