@@ -1,5 +1,6 @@
 import bittensor
 
+# Add minimum account amount aswell, make sure accoutn stays topped up past this point
 STAKING_FEES = 0.0015 # Estimate of transaction fees
 
 class WalletOperationFunctionality:

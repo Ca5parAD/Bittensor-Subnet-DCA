@@ -1,5 +1,5 @@
 import bittensor
-import auto_dca_utils as utils
+import advanced_utils as utils
 import json
 
 # Load config

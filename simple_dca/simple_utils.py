@@ -1,5 +1,6 @@
 import bittensor
 
+# Port over features from advanced: staking fees, multiple delegators
 MINIMUM_TAO_BALANCE = 0.0000005
 
 class WalletOperationFunctionality:
