@@ -3,14 +3,16 @@ A Python program to execute multiple Bittensor subnet staking operations at once
 
 ### Features
 - Checks wallet balances (free TAO, root stake, alpha stake) before staking
-- Validates subnet delegation and prompts user confirmation
-- Supports unstaking from root if free TAO is insufficient to make stake
+- Checks subnet delegation, confirms which delegator to use if multiple and prompts user confirmation
+- Supports unstaking from root if free TAO is insufficient to make stakes
 - Performs user-defined staking operations into specified subnets
+
 
 ## Prerequisites
 - Python 3.8+
 - Bittensor library
 - A configured Bittensor wallet with TAO
+
 
 ## Installation
 Clone the repo:
@@ -19,66 +21,63 @@ git clone https://github.com/Ca5parAD/Bittensor-Subnet-DCA.git
 cd Bittensor-Subnet-DCA
 ```
 
+
 ## Usage
 The file includes 2 program options for different levels of staking configuration complexity:
 
-- **auto_dca_simple** uses the same stake amount for all subnets
-- **Auto_DCA_Advanced** allows for different stake amounts on each subnet and under specified price levels
+- **simple_dca** uses the same stake amount for all subnets
+- **advanced_dca** allows for different stake amounts on each subnet and under specified price levels
 
-
-### For auto_dca_simple
-Edit auto_dca_simple.py to set:
-- YOUR_WALLET_PATH: Path to your Bittensor wallet
-- YOUR_WALLET_NAME: Wallet name
-- YOUR_NETWORK: 'finney' for mainnet or 'test' for testnet
-  
-- STAKE_AMOUNT: TAO to stake per subnet
-- NETUIDS_TO_STAKE: List of subnet IDs
+### For both programs
+Edit config.json to declar wallet path, name and network to be used:
+- wallet_path: Path to your Bittensor wallet
+- wallet_name: Wallet name
+- network: 'finney' for mainnet or 'test' for testnet
 
 #### Example
-```py
-YOUR_WALLET_PATH: Final = '/Users/<user>/.bittensor/wallets'
-YOUR_WALLET_NAME: Final = 'MyWallet'
-YOUR_NETWORK: Final = 'finney'
-
-STAKE_AMOUNT: Final = 0.1
-NETUIDS_TO_STAKE: Final = [1, 3, 56, 64]
+```json
+"wallet_path": "/Users/<user>/.bittensor/wallets",
+"wallet_name": "MyWallet",
+"network": "finney",
 ```
 
-### For auto_dca_advanced
-Edit auto_dca_advanced.py to set:
-- YOUR_WALLET_PATH: Path to your Bittensor wallet
-- YOUR_WALLET_NAME: Wallet name
-- YOUR_NETWORK: 'finney' for mainnet or 'test' for testnet
+### For simple_dca
+Edit simple_dca.py to set:
+- stake_amount_simple: Stake amount per subnet
+- netuids_to_stake_simple: list of netuids to stake into
 
+#### Example
+```json
+"stake_amount_simple": 0.1,
+"netuids_to_stake_simple": [19, 56, 64],
+```
+
+### For advanced_dca
+Edit advanced_dca.py to set:
 - STAKE_CONFIG: Staking configuration - default stake and stake amount under price levels
 
 #### Example
-```py
-YOUR_WALLET_PATH = '/Users/<user>/.bittensor/wallets'
-YOUR_WALLET_NAME = 'MyWallet'
-YOUR_NETWORK = 'finney'
-
-STAKE_CONFIG = { # Make sure multiplier levels are in descending order
-    1: {'default_stake': 0.3, 'sub_level_stakes': [(0.0275, 0.4), (0.0193, 0.5)]},
-    4: {'default_stake': 0.25, 'sub_level_stakes': None},
-    64: {'default_stake': 0.75, 'sub_level_stakes': [(0.1386, 1.5), (0.1179, 2)]}
-}
+```json
+"stake_config_advanced": {
+        "19": {"default_stake": 0.8, "sub_level_stakes": null},
+        "56": {"default_stake": 1, "sub_level_stakes": [[0.047, 2], [0.0366, 3]]},
+        "64": {"default_stake": 0.75, "sub_level_stakes": [[0.1386, 1.5]]}
+    }
 ```
-
 
 ### Run the script:
 ```bash
-python auto_dca.py
+python dca_simple.py
 ```
 or
 ```bash
-python auto_dca_simple.py
+python dca_advanced.py
 ```
 
 > [!IMPORTANT]
 > - Requires an initial stake on each subnet
 > - Use testnet for safe testing before mainnet
+
 
 ## Contributing
 Contributions welcome! Open an issue or submit a pull request
