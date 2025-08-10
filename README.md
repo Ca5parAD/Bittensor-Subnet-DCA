@@ -59,9 +59,9 @@ Edit advanced_dca.py to set:
 #### Example
 ```json
 "stake_config_advanced": {
-        "19": {"default_stake": 0.8, "sub_level_stakes": null},
-        "56": {"default_stake": 1, "sub_level_stakes": [[0.047, 2], [0.0366, 3]]},
-        "64": {"default_stake": 0.75, "sub_level_stakes": [[0.1386, 1.5]]}
+        "19": {"default_stake": 0.2, "sub_level_stakes": null},
+        "56": {"default_stake": 0.1, "sub_level_stakes": [[0.047, 0.2], [0.0366, 0.3]]},
+        "64": {"default_stake": 0.15, "sub_level_stakes": [[0.1386, 0.2]]}
     }
 ```
 
