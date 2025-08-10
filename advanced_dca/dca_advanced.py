@@ -10,7 +10,8 @@ with open('../config.json', 'r') as config_file:
 WALLET_PATH = config['wallet_path']
 YOUR_WALLET_NAME = config['wallet_name']
 NETWORK = config['network']
-STAKE_CONFIG = config['stake_config_advanced']
+# Converts string netuid keys to intergers
+STAKE_CONFIG = {int(k): v for k, v in config['stake_config_advanced'].items()}
 
 
 # Setup wallet and subtensor
