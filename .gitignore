@@ -1,4 +1,4 @@
-# Ignores personal staking configuration
+# Ignores changes to the config file from the blank template
 *.json
 
 # Ignores pycache
