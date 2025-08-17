@@ -61,12 +61,12 @@ class WalletOperationFunctionality:
 
 
     def config_stake_operations(self, stake_config):
-        self.STAKE_CONFIG = stake_config
+        self.stake_config = stake_config
         self.stakes_to_make_info = dict()
         self.no_stake_netuids = []
 
         # Cycle through subnets to stake into
-        for netuid, config in self.STAKE_CONFIG.items():
+        for netuid, config in self.stake_config.items():
             if netuid in self.raw_alpha_stakes_info:
                 self.stakes_to_make_info[netuid] = self.raw_alpha_stakes_info[netuid] # Append stake info to stakes to be made 
                 stake_amount = config['default_stake']
