@@ -86,29 +86,30 @@ class WalletOperationFunctionality:
 
         # Check this
         for netuid, hotkey_owner_pairs in self.duplicate_netuid_stakes.items():
-            print(f'\nYou have multiple delegations on subnet {netuid}:')
-            pairs_to_show = [(self.stakes_to_make_info[netuid]['delegator_hotkey'], self.stakes_to_make_info[netuid]['delegator_owner'])]
-            for pair in hotkey_owner_pairs:
-                pairs_to_show.append(pair)
+            if netuid in self.stakes_to_make_info:
+                print(f'\nYou have multiple delegations on subnet {netuid}:')
+                pairs_to_show = [(self.stakes_to_make_info[netuid]['delegator_hotkey'], self.stakes_to_make_info[netuid]['delegator_owner'])]
+                for pair in hotkey_owner_pairs:
+                    pairs_to_show.append(pair)
 
-            for i, pair in enumerate(pairs_to_show):
-                try:
-                    identity_info = self.SUBTENSOR.query_identity(pair[1])
-                except Exception as e:
-                    print(f"Error getting subnet {netuid} name: {str(e)}")
-                    raise
+                for i, pair in enumerate(pairs_to_show):
+                    try:
+                        identity_info = self.SUBTENSOR.query_identity(pair[1])
+                    except Exception as e:
+                        print(f"Error getting subnet {netuid} info: {str(e)}")
+                        raise
 
-                if identity_info is not None:
-                    name = identity_info.name
-                else:
-                    name = '[Name not found]'
-                    
-                print(f'({i+1}) {name} ({pair[0][:6]}...)')
+                    if identity_info is not None:
+                        name = identity_info.name
+                    else:
+                        name = '[Name not found]'
+                        
+                    print(f'({i+1}) {name} ({pair[0][:6]}...)')
 
-            delegator_index = int(input('What delegator would you like to use (enter the number): ')) - 1
+                delegator_index = int(input('What delegator would you like to use (enter the number): ')) - 1
 
-            self.stakes_to_make_info[netuid]['delegator_hotkey'] = pairs_to_show[delegator_index][0]
-            self.stakes_to_make_info[netuid]['delegator_owner'] = pairs_to_show[delegator_index][1]
+                self.stakes_to_make_info[netuid]['delegator_hotkey'] = pairs_to_show[delegator_index][0]
+                self.stakes_to_make_info[netuid]['delegator_owner'] = pairs_to_show[delegator_index][1]
 
         print(f'\nReady to stake into the following {len(self.stakes_to_make_info)} subnets:')
         self.total_stake_amount = 0
