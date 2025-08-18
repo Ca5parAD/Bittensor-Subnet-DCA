@@ -29,40 +29,40 @@ The file includes 2 program options for different levels of staking configuratio
 - **advanced_dca** allows for different stake amounts on each subnet and under specified price levels
 
 ### For both programs
-Edit config.json to declar wallet path, name and network to be used:
-- wallet_path: Path to your Bittensor wallet
-- wallet_name: Wallet name
-- network: 'finney' for mainnet or 'test' for testnet
+Edit `config.py` to declare wallet path, name, and network to be used:
+- WALLET_PATH: Path to your Bittensor wallet
+- WALLET_NAME: Wallet name
+- NETWORK: 'finney' for mainnet or 'test' for testnet
 
 #### Example
-```json
-"wallet_path": "/Users/<user>/.bittensor/wallets",
-"wallet_name": "MyWallet",
-"network": "finney",
+```python
+WALLET_PATH = "/Users/<user>/.bittensor/wallets"
+WALLET_NAME = "MyWallet"
+NETWORK = "finney"
 ```
 
 ### For simple_dca
-Edit simple_dca.py to set:
-- stake_amount_simple: Stake amount per subnet
-- netuids_to_stake_simple: list of netuids to stake into
+Edit `config.py` to set:
+- STAKE_AMOUNT_SIMPLE: Stake amount per subnet
+- NETUIDS_TO_STAKE_SIMPLE: list of netuids to stake into
 
 #### Example
-```json
-"stake_amount_simple": 0.1,
-"netuids_to_stake_simple": [19, 56, 64],
+```python
+STAKE_AMOUNT_SIMPLE = 0.1
+NETUIDS_TO_STAKE_SIMPLE = [19, 56, 64]
 ```
 
 ### For advanced_dca
-Edit advanced_dca.py to set:
-- STAKE_CONFIG: Staking configuration - default stake and stake amount under price levels
+Edit `config.py` to set:
+- STAKE_CONFIG_ADVANCED: Staking configuration - default stake and stake amount under price levels
 
 #### Example
-```json
-"stake_config_advanced": {
-        "19": {"default_stake": 0.2, "sub_level_stakes": null},
-        "56": {"default_stake": 0.1, "sub_level_stakes": [[0.047, 0.2], [0.0366, 0.3]]},
-        "64": {"default_stake": 0.15, "sub_level_stakes": [[0.1386, 0.2]]}
-    }
+```python
+STAKE_CONFIG_ADVANCED = {
+    19: {"default_stake": 0.2, "sub_level_stakes": None},
+    56: {"default_stake": 0.1, "sub_level_stakes": [[0.047, 0.2], [0.0366, 0.3]]},
+    64: {"default_stake": 0.15, "sub_level_stakes": [[0.1386, 0.2]]}
+}
 ```
 
 ### Run the script:
