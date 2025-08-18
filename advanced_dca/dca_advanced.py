@@ -1,6 +1,6 @@
 import bittensor
 import advanced_utils as utils
-from config import WALLET_PATH, WALLET_NAME, NETWORK, STAKE_CONFIG_ADVANCED
+from ..config import WALLET_PATH, WALLET_NAME, NETWORK, STAKE_CONFIG_ADVANCED
 
 # Setup wallet and subtensor
 try:
