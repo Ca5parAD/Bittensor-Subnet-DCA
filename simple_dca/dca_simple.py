@@ -1,18 +1,6 @@
 import bittensor
 import simple_utils as utils
-import json
-
-# Load config
-with open('../config.json', 'r') as config_file:
-    config = json.load(config_file)
-
-# Populate personal info
-WALLET_PATH = config['wallet_path']
-WALLET_NAME = config['wallet_name']
-NETWORK = config['network']
-
-STAKE_AMOUNT_SIMPLE = config['stake_amount_simple']
-NETUIDS_TO_STAKE_SIMPLE = config['netuids_to_stake_simple']
+from ..config import WALLET_PATH, WALLET_NAME, NETWORK, NETUIDS_TO_STAKE_SIMPLE, STAKE_AMOUNT_SIMPLE
 
 
 # Setup wallet and subtensor
